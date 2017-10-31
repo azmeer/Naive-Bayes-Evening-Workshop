@@ -88,6 +88,10 @@ class NaiveBayesClassifier(object):
             # Add prior and likelihoods in logspace to avoid floating point underflow.
             # The class with the highest log probability is still the most probable.
             numerator_terms = [prior] + likelihoods
+            # If A > B, then log(A) > log(B)
+            # so instead of multiplying all the small probabilities together (where we would
+            # get a number underflow, we move to log space and just add the logs together.
+            # We do this a lot in machine learning.
             pseudo_probability_by_class[klass] = sum([math.log(t) for t in numerator_terms])
 
         # Pick the class with the maximum probability and return it as our prediction
